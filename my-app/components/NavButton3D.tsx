@@ -1,4 +1,3 @@
-
 import { useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Text } from '@react-three/drei'
@@ -9,6 +8,8 @@ interface NavButton3DProps {
   position: [number, number, number]
   size?: [number, number, number]
   onClick?: () => void
+  onPointerEnter?: () => void
+  onPointerLeave?: () => void
   baseColor?: string
   hoverColor?: string
 }
@@ -18,14 +19,15 @@ export default function NavButton3D({
   position,
   size = [3, 0.9, 0.4],
   onClick,
+  onPointerEnter,
+  onPointerLeave,
   baseColor = '#FF9292',
-  hoverColor = '#22d3ee', 
+  hoverColor = '#22d3ee',
 }: NavButton3DProps) {
   const meshRef = useRef<THREE.Mesh>(null)
   const [hovered, setHovered] = useState(false)
-  const [clicked, setClicked] = useState(false)
+  const [, setClicked] = useState(false)
 
-  
   useFrame((_, delta) => {
     if (!meshRef.current) return
     const material = meshRef.current.material as THREE.MeshStandardMaterial
@@ -51,11 +53,13 @@ export default function NavButton3D({
           e.stopPropagation()
           setHovered(true)
           document.body.style.cursor = 'pointer'
+          onPointerEnter?.()
         }}
         onPointerOut={(e) => {
           e.stopPropagation()
           setHovered(false)
           document.body.style.cursor = 'auto'
+          onPointerLeave?.()
         }}
         onClick={(e) => {
           e.stopPropagation()

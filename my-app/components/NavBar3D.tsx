@@ -1,9 +1,10 @@
-
 import NavButton3D from './NavButton3D'
 
-interface NavItem {
+export interface NavItem {
   label: string
   onClick?: () => void
+  onPointerEnter?: () => void
+  onPointerLeave?: () => void
   baseColor?: string
   hoverColor?: string
 }
@@ -33,6 +34,8 @@ export default function NavBar3D({
           position={[startX + i * (buttonSize[0] + gap), 0, 0]}
           size={buttonSize}
           onClick={item.onClick}
+          onPointerEnter={item.onPointerEnter}
+          onPointerLeave={item.onPointerLeave}
           baseColor={item.baseColor}
           hoverColor={item.hoverColor}
         />
