@@ -12,7 +12,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Home', href: '#home' },
   { label: 'About', href: '#about' },
   { label: 'Work', href: '#work' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Skills', href: '#Skills' },
 ]
 
 type Header3DProps = {
