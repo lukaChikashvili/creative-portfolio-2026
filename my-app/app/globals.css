@@ -1,2 +1,6 @@
+@import url('https://fonts.cdnfonts.com/css/allim-personal-use-only');
 @import "tailwindcss";
 
+body {
+    font-family: 'allim Personal Use Only', sans-serif;
+}
