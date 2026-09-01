@@ -5,6 +5,7 @@ import gsap from 'gsap'
 import DeformingGradientBackground from './WaterPlane'
 import Header from './Header'
 import CameraRig, { type CameraRigHandle } from './CameraRig'
+import { Stars } from '@react-three/drei'
 
 const SECTIONS: Record<string, { position: [number, number, number]; lookAt: [number, number, number]; planeOffset: number }> = {
   Home: { position: [0, 0, 5], lookAt: [0, 0, -10], planeOffset: 0 },
@@ -67,6 +68,7 @@ const Experience = () => {
       <DeformingGradientBackground ref={plane4Ref} position={[100, 0, -10]} colorA="#66BB6A" colorB="#1B5E20" width={50} height={25} />
 
       <Header onNavigate={handleNavigate} />
+      <Stars />
     </>
   )
 }
