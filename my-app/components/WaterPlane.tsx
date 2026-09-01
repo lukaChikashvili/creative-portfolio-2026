@@ -1,4 +1,6 @@
-import { useMemo, useRef } from 'react'
+'use client'
+
+import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react'
 import { useFrame, extend, type ThreeElement } from '@react-three/fiber'
 import { shaderMaterial } from '@react-three/drei'
 import * as THREE from 'three'
@@ -181,7 +183,7 @@ declare module '@react-three/fiber' {
   }
 }
 
-type DeformingGradientBackgroundProps = {
+export type DeformingGradientBackgroundProps = {
   position?: [number, number, number]
   rotation?: [number, number, number]
   width?: number
@@ -204,34 +206,42 @@ type DeformingGradientBackgroundProps = {
   strengthLerp?: number
 }
 
-export type DeformingGradientBackgroundHandle = {
+export type DeformingGradientBackgroundHandle = THREE.Mesh & {
   addRipple: (localX: number, localY: number, strength?: number) => void
 }
 
-export default function DeformingGradientBackground({
-  position = [0, 0, -9],
-  rotation = [0, 0, 0],
-  width = 50,
-  height = 25,
-  widthSegments = 128,
-  heightSegments = 64,
-  colorA = '#000000',
-  colorB = '#5B23FF',
-  glowColor = '#F375C2',
-  wobbleAmount = 0.25,
-  wobbleSpeed = 0.6,
-  pushStrength = 1.2,
-  pushRadius = 0.22,
-  ringSpeed = 0.6,
-  ringWidth = 0.05,
-  maxAge = 2.5,
-  shininess = 40,
-  rimStrength = 0.35,
-  mouseLerp = 0.12,
-  strengthLerp = 0.1,
-}: DeformingGradientBackgroundProps) {
+const DeformingGradientBackground = forwardRef<
+  THREE.Mesh,
+  DeformingGradientBackgroundProps
+>(function DeformingGradientBackground(
+  {
+    position = [0, 0, -9],
+    rotation = [0, 0, 0],
+    width = 50,
+    height = 25,
+    widthSegments = 128,
+    heightSegments = 64,
+    colorA = '#000000',
+    colorB = '#5B23FF',
+    glowColor = '#F375C2',
+    wobbleAmount = 0.25,
+    wobbleSpeed = 0.6,
+    pushStrength = 1.2,
+    pushRadius = 0.22,
+    ringSpeed = 0.6,
+    ringWidth = 0.05,
+    maxAge = 2.5,
+    shininess = 40,
+    rimStrength = 0.35,
+    mouseLerp = 0.12,
+    strengthLerp = 0.1,
+  },
+  ref
+) {
   const meshRef = useRef<THREE.Mesh>(null!)
   const materialRef = useRef<THREE.ShaderMaterial>(null!)
+
+  useImperativeHandle(ref, () => Object.assign(meshRef.current, { addRipple }), [])
 
   const geometry = useMemo(
     () => new THREE.PlaneGeometry(width, height, widthSegments, heightSegments),
@@ -255,6 +265,12 @@ export default function DeformingGradientBackground({
     ringPositions.current[i].set(u, v, time)
     ringStrengths.current[i] = strength
     cursor.current = (i + 1) % MAX_RINGS
+  }
+
+  function addRipple(localX: number, localY: number, strength = 1.0) {
+    const u = localX / width + 0.5
+    const v = localY / height + 0.5
+    addRing(u, v, currentTime.current, strength)
   }
 
   function toUv(localPoint: THREE.Vector3) {
@@ -325,4 +341,6 @@ export default function DeformingGradientBackground({
       />
     </mesh>
   )
-}
+})
+
+export default DeformingGradientBackground
