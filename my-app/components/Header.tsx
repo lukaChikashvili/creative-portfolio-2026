@@ -20,13 +20,14 @@ type Header3DProps = {
   heightRatio?: number
   widthRatio?: number
   color?: string
+  onNavigate?: (section: string) => void
 }
 
 const Header3D = ({
   z = -1,
   heightRatio = 0.022,
   widthRatio = 0.55,
-  color = '#FFF1F1',
+  color = '#FFF1F1', onNavigate
 }: Header3DProps) => {
   const { viewport } = useThree()
 
@@ -64,8 +65,8 @@ const Header3D = ({
         <meshPhysicalMaterial
           color={color}
           transmission={0.9}
-          thickness={0.4}
-          roughness={0.15}
+          thickness={20}
+          roughness={0.05}
           metalness={0}
           clearcoat={1}
           ior={3.5}
@@ -81,8 +82,8 @@ const Header3D = ({
             <meshPhysicalMaterial
               color={color}
               transmission={1}
-              thickness={0.5}
-              roughness={0.1}
+              thickness={1}
+              roughness={0.15}
               metalness={0}
               clearcoat={1}
               ior={1.6}
@@ -92,6 +93,10 @@ const Header3D = ({
           <Html center transform={false} style={{ pointerEvents: 'auto' }}>
             
              <a href={item.href}
+             onClick={(e) => {
+                e.preventDefault() 
+                onNavigate?.(item.label)
+              }}
               className="text-[17px] font-medium text-white/90 hover:text-white whitespace-nowrap select-none transition-colors"
             >
               {item.label}

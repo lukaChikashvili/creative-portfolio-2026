@@ -204,6 +204,10 @@ type DeformingGradientBackgroundProps = {
   strengthLerp?: number
 }
 
+export type DeformingGradientBackgroundHandle = {
+  addRipple: (localX: number, localY: number, strength?: number) => void
+}
+
 export default function DeformingGradientBackground({
   position = [0, 0, -9],
   rotation = [0, 0, 0],
@@ -211,7 +215,7 @@ export default function DeformingGradientBackground({
   height = 25,
   widthSegments = 128,
   heightSegments = 64,
-  colorA = '#00F7FF',
+  colorA = '#000000',
   colorB = '#5B23FF',
   glowColor = '#F375C2',
   wobbleAmount = 0.25,
