@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import gsap from "gsap"
 
 const LANGUAGES = [
@@ -13,7 +13,7 @@ const SECTION_CONTENT: Record<
   Home: {
     eyebrow: "Hi, I'm Luka",
     title: ["Creative", "Web Developer"],
-    description: null, 
+    description: null,
   },
   About: {
     eyebrow: "About",
@@ -33,23 +33,34 @@ const SECTION_CONTENT: Record<
   },
 }
 
+const CLIP_HIDDEN = "inset(100% 0% 0% 0%)"
+const CLIP_VISIBLE = "inset(0% 0% 0% 0%)"
+
 interface HeroProps {
   activeSection?: string
 }
 
 const Hero = ({ activeSection = "Home" }: HeroProps) => {
-  const [displayedSection, setDisplayedSection] = useState(activeSection)
-  const [langIndex, setLangIndex] = useState(0)
+  const [displayedSection, setDisplayedSection] = useState(activeSection);
+  const [langIndex, setLangIndex] = useState(0);
 
-  const containerRef = useRef<HTMLDivElement>(null)
-  const eyebrowRef = useRef<HTMLParagraphElement>(null)
-  const titleRef = useRef<HTMLHeadingElement>(null)
-  const descriptionRef = useRef<HTMLParagraphElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null);
+  const eyebrowRef = useRef<HTMLParagraphElement>(null);
+  const titleLineRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const descriptionRef = useRef<HTMLParagraphElement>(null);
 
-  const content = SECTION_CONTENT[displayedSection] ?? SECTION_CONTENT.Home
-  const isHome = displayedSection === "Home"
+  const content = SECTION_CONTENT[displayedSection] ?? SECTION_CONTENT.Home;
+  const isHome = displayedSection === "Home";
 
 
+  titleLineRefs.current = [];
+
+  const getRevealEls = () =>
+    [eyebrowRef.current, ...titleLineRefs.current, descriptionRef.current].filter(
+      (el): el is HTMLElement => Boolean(el)
+    )
+
+ 
   useEffect(() => {
     if (!isHome) return
     const interval = setInterval(() => {
@@ -58,73 +69,101 @@ const Hero = ({ activeSection = "Home" }: HeroProps) => {
     return () => clearInterval(interval)
   }, [isHome])
 
-
-  useEffect(() => {
+ 
+  useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      const els = [eyebrowRef.current, titleRef.current, descriptionRef.current].filter(Boolean)
-      gsap.fromTo(
-        els,
-        { opacity: 0, y: 24 },
-        { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", stagger: 0.08 }
-      )
-    }, containerRef)
+      const els = getRevealEls()
+      gsap.set(els, { clipPath: CLIP_HIDDEN, y: 28 })
+      gsap.to(els, {
+        clipPath: CLIP_VISIBLE,
+        y: 0,
+        duration: 1.5,
+        ease: "expo.out",
+        stagger: 0.12,
+        delay: 1,
+      })
+    }, containerRef);
 
     return () => ctx.revert()
   }, [])
 
-  
+
   useEffect(() => {
     if (activeSection === displayedSection) return
 
     const ctx = gsap.context(() => {
-      const els = [eyebrowRef.current, titleRef.current, descriptionRef.current].filter(Boolean)
+      const outEls = getRevealEls()
       const tl = gsap.timeline()
 
-
-      tl.to(els, {
-        opacity: 0,
-        y: -24,
-        duration: 0.4,
-        ease: "power2.in",
+     
+      tl.to(outEls, {
+        clipPath: "inset(0% 0% 100% 0%)",
+        y: -20,
+        duration: 1,
+        delay: 2.5, 
+        ease: "power3.in",
         stagger: 0.04,
       })
 
-   
-      tl.call(() => setDisplayedSection(activeSection))
-
-    
-      tl.fromTo(
-        els,
-        { opacity: 0, y: 24 },
-        { opacity: 1, y: 0, duration: 0.7, ease: "power3.out", stagger: 0.08 }
-      )
-    }, containerRef)
+      
+      tl.call(() => {
+        setDisplayedSection(activeSection)
+      })
+    }, containerRef);
 
     return () => ctx.revert()
-  }, [activeSection, displayedSection])
+  }, [activeSection, displayedSection]);
+
+
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      const inEls = getRevealEls()
+      gsap.set(inEls, { clipPath: CLIP_HIDDEN, y: 28 })
+      gsap.to(inEls, {
+        clipPath: CLIP_VISIBLE,
+        y: 0,
+        duration: 1.1,
+        ease: "expo.out",
+        stagger: 0.12,
+      })
+    }, containerRef);
+    
+
+    return () => ctx.revert()
+  }, [displayedSection])
 
   return (
     <div ref={containerRef} className="flex flex-col items-center text-center gap-4">
       <p
         ref={eyebrowRef}
         className="text-white/60 text-sm md:text-base tracking-[0.3em] uppercase"
+        style={{ willChange: "clip-path, transform" }}
       >
         {content.eyebrow}
       </p>
 
-      <h1
-        ref={titleRef}
-        className="text-5xl md:text-9xl font-bold text-white tracking-tight leading-[0.95]"
-      >
+      <h1 className="text-5xl md:text-9xl font-bold text-white tracking-tight leading-[0.95]">
         {content.title.map((line, i) => (
-          <span key={i}>
-            {line}
-            {i < content.title.length - 1 && <br />}
+          <span key={`${displayedSection}-${i}`} className="block overflow-visible">
+            <span
+              ref={(el) => {
+                titleLineRefs.current[i] = el
+              }}
+              className="inline-block"
+              style={{ willChange: "clip-path, transform" }}
+            >
+              {line}
+            </span>
           </span>
         ))}
       </h1>
 
-      <p ref={descriptionRef} className="max-w-xl text-white/70 text-base md:text-lg mt-2">
+      <p
+        ref={descriptionRef}
+        className="max-w-xl text-white/70 text-base md:text-lg mt-2"
+        style={{ willChange: "clip-path, transform" }}
+      >
         {isHome ? (
           <>
             I build interactive, shader-driven web experiences — and I talk about
