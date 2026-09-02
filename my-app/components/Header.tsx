@@ -1,4 +1,4 @@
-// components/Header3D.tsx
+
 import { useMemo } from 'react'
 import { useThree } from '@react-three/fiber'
 import { RoundedBox, Html } from '@react-three/drei'

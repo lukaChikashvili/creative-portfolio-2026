@@ -5,3 +5,8 @@ body {
     font-family: 'allim Personal Use Only', sans-serif;
     background-color: black;
 }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
