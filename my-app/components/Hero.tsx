@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import gsap from "gsap"
+import ProjectTimeline, { PROJECTS, type Project } from "./ProjectTimeline"
 
 const LANGUAGES = [
   "Georgian", "English", "Spanish", "French", "Italian", "Portuguese", "Hindi", "Chinese",
@@ -41,26 +42,27 @@ interface HeroProps {
 }
 
 const Hero = ({ activeSection = "Home" }: HeroProps) => {
-  const [displayedSection, setDisplayedSection] = useState(activeSection);
-  const [langIndex, setLangIndex] = useState(0);
+  const [displayedSection, setDisplayedSection] = useState(activeSection)
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [langIndex, setLangIndex] = useState(0)
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const eyebrowRef = useRef<HTMLParagraphElement>(null);
-  const titleLineRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const descriptionRef = useRef<HTMLParagraphElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null)
+  const eyebrowRef = useRef<HTMLParagraphElement>(null)
+  const titleLineRefs = useRef<(HTMLSpanElement | null)[]>([])
+  const descriptionRef = useRef<HTMLParagraphElement>(null)
 
-  const content = SECTION_CONTENT[displayedSection] ?? SECTION_CONTENT.Home;
-  const isHome = displayedSection === "Home";
+  const content = SECTION_CONTENT[displayedSection] ?? SECTION_CONTENT.Home
+  const isHome = displayedSection === "Home"
+  const isWork = displayedSection === "Work"
 
-
-  titleLineRefs.current = [];
+  titleLineRefs.current = []
 
   const getRevealEls = () =>
     [eyebrowRef.current, ...titleLineRefs.current, descriptionRef.current].filter(
       (el): el is HTMLElement => Boolean(el)
     )
 
- 
+
   useEffect(() => {
     if (!isHome) return
     const interval = setInterval(() => {
@@ -70,24 +72,15 @@ const Hero = ({ activeSection = "Home" }: HeroProps) => {
   }, [isHome])
 
  
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      const els = getRevealEls()
-      gsap.set(els, { clipPath: CLIP_HIDDEN, y: 28 })
-      gsap.to(els, {
-        clipPath: CLIP_VISIBLE,
-        y: 0,
-        duration: 1.5,
-        ease: "expo.out",
-        stagger: 0.12,
-        delay: 1,
-      })
-    }, containerRef);
+  useEffect(() => {
+    if (activeSection === "Work") {
+      setSelectedProject(PROJECTS[0])
+    } else {
+      setSelectedProject(null)
+    }
+  }, [activeSection])
 
-    return () => ctx.revert()
-  }, [])
-
-
+  
   useEffect(() => {
     if (activeSection === displayedSection) return
 
@@ -95,26 +88,21 @@ const Hero = ({ activeSection = "Home" }: HeroProps) => {
       const outEls = getRevealEls()
       const tl = gsap.timeline()
 
-     
       tl.to(outEls, {
         clipPath: "inset(0% 0% 100% 0%)",
         y: -20,
-        duration: 1,
-        delay: 2.5, 
+        duration: 0.45,
         ease: "power3.in",
         stagger: 0.04,
       })
 
-      
       tl.call(() => {
         setDisplayedSection(activeSection)
       })
-    }, containerRef);
+    }, containerRef)
 
     return () => ctx.revert()
-  }, [activeSection, displayedSection]);
-
-
+  }, [activeSection, displayedSection])
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -127,58 +115,95 @@ const Hero = ({ activeSection = "Home" }: HeroProps) => {
         ease: "expo.out",
         stagger: 0.12,
       })
-    }, containerRef);
-    
+    }, containerRef)
 
     return () => ctx.revert()
   }, [displayedSection])
 
-  return (
-    <div ref={containerRef} className="flex flex-col items-center text-center gap-4">
-      <p
-        ref={eyebrowRef}
-        className="text-white/60 text-sm md:text-base tracking-[0.3em] uppercase"
-        style={{ willChange: "clip-path, transform" }}
-      >
-        {content.eyebrow}
-      </p>
 
-      <h1 className="text-5xl md:text-9xl font-bold text-white tracking-tight leading-[0.95]">
-        {content.title.map((line, i) => (
-          <span key={`${displayedSection}-${i}`} className="block overflow-visible">
-            <span
-              ref={(el) => {
-                titleLineRefs.current[i] = el
-              }}
-              className="inline-block"
-              style={{ willChange: "clip-path, transform" }}
-            >
-              {line}
-            </span>
-          </span>
-        ))}
-      </h1>
+  const handleSelectProject = (project: Project) => {
+    if (!isWork) return
 
-      <p
-        ref={descriptionRef}
-        className="max-w-xl text-white/70 text-base md:text-lg mt-2"
-        style={{ willChange: "clip-path, transform" }}
+    
+    const els = [titleLineRefs.current[0], descriptionRef.current].filter(Boolean)
+    gsap.to(els, {
+      opacity: 0,
+      y: -10,
+      duration: 0.5,
+      onComplete: () => {
+        setSelectedProject(project)
+        gsap.to(els, {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          delay: 1.5,
+          ease: "power2.out",
+        })
+      },
+    })
+  }
+
+  
+  const currentTitleLines =
+    isWork && selectedProject ? [selectedProject.title] : content.title
+
+  const currentDescription =
+    isWork && selectedProject
+      ? selectedProject.description
+      : content.description
+
+  
+    return (
+      <div 
+        ref={containerRef} 
+        className="flex flex-col items-center text-center gap-4 pointer-events-none"
       >
-        {isHome ? (
-          <>
-            I build interactive, shader-driven web experiences — and I talk about
-            them in{" "}
-            <span className="text-white font-medium inline-block min-w-[7ch] transition-opacity duration-300">
-              {LANGUAGES[langIndex]}
+      
+        <p ref={eyebrowRef} className="text-white/60 text-sm md:text-base tracking-[0.3em] uppercase">
+          {isWork && selectedProject ? selectedProject.category : content.eyebrow}
+        </p>
+    
+        <h1 className="text-5xl md:text-9xl font-bold text-white tracking-tight leading-[0.95]">
+          {currentTitleLines.map((line, i) => (
+            <span key={`${displayedSection}-${selectedProject?.id || 'default'}-${i}`} className="block overflow-visible">
+              <span
+                ref={(el) => {
+                  titleLineRefs.current[i] = el
+                }}
+                className="inline-block"
+              >
+                {line}
+              </span>
             </span>
-            , among 8 languages.
-          </>
-        ) : (
-          content.description
+          ))}
+        </h1>
+    
+        <p ref={descriptionRef} className="max-w-xl text-white/70 text-base md:text-lg mt-2 min-h-[48px]">
+          {isHome ? (
+            <>
+              I build interactive, shader-driven web experiences — and I talk about them in{" "}
+              <span className="text-white font-medium inline-block min-w-[7ch]">
+                {LANGUAGES[langIndex]}
+              </span>
+              , among 8 languages.
+            </>
+          ) : (
+            currentDescription
+          )}
+        </p>
+    
+       
+        {isWork && selectedProject && (
+          <div className="pointer-events-auto">
+            <ProjectTimeline
+              activeProject={selectedProject}
+              onSelectProject={handleSelectProject}
+            />
+          </div>
         )}
-      </p>
-    </div>
-  )
+      </div>
+    )
+  
 }
 
 export default Hero

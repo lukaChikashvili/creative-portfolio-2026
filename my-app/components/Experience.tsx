@@ -2,7 +2,6 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import gsap from 'gsap'
-import { Stars } from '@react-three/drei'
 import DeformingGradientBackground from './WaterPlane'
 import CameraRig, { type CameraRigHandle } from './CameraRig'
 
@@ -94,7 +93,7 @@ const Experience = ({ activeSection }: ExperienceProps) => {
       <DeformingGradientBackground ref={plane3Ref} position={[-50, 0, -10]} colorA="#2E2910" colorB="#F599C6" width={50} height={25} />
       <DeformingGradientBackground ref={plane4Ref} position={[100, 0, -10]} colorA="#66BB6A" colorB="#1B5E20" width={50} height={25} />
 
-      <Stars />
+     
     </>
   )
 }
