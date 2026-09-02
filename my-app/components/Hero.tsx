@@ -71,7 +71,7 @@ const Hero = ({ activeSection = "Home" }: HeroProps) => {
     return () => clearInterval(interval)
   }, [isHome])
 
- 
+  
   useEffect(() => {
     if (activeSection === "Work") {
       setSelectedProject(PROJECTS[0])
@@ -80,7 +80,7 @@ const Hero = ({ activeSection = "Home" }: HeroProps) => {
     }
   }, [activeSection])
 
-  
+
   useEffect(() => {
     if (activeSection === displayedSection) return
 
@@ -91,6 +91,7 @@ const Hero = ({ activeSection = "Home" }: HeroProps) => {
       tl.to(outEls, {
         clipPath: "inset(0% 0% 100% 0%)",
         y: -20,
+        opacity: 0,
         duration: 0.45,
         ease: "power3.in",
         stagger: 0.04,
@@ -104,12 +105,14 @@ const Hero = ({ activeSection = "Home" }: HeroProps) => {
     return () => ctx.revert()
   }, [activeSection, displayedSection])
 
+
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       const inEls = getRevealEls()
-      gsap.set(inEls, { clipPath: CLIP_HIDDEN, y: 28 })
+      gsap.set(inEls, { clipPath: CLIP_HIDDEN, opacity: 0, y: 28 })
       gsap.to(inEls, {
         clipPath: CLIP_VISIBLE,
+        opacity: 1,
         y: 0,
         duration: 1.1,
         ease: "expo.out",
@@ -122,28 +125,49 @@ const Hero = ({ activeSection = "Home" }: HeroProps) => {
 
 
   const handleSelectProject = (project: Project) => {
-    if (!isWork) return
+    if (!isWork || project.id === selectedProject?.id) return
+
+    const els = [eyebrowRef.current, titleLineRefs.current[0], descriptionRef.current].filter(
+      (el): el is HTMLElement => Boolean(el)
+    )
+
+    const tl = gsap.timeline()
+
+
+    tl.to(els, {
+      opacity: 0,
+      clipPath: "inset(0% 0% 100% 0%)",
+      y: -15,
+      duration: 0.3,
+      ease: "power2.in",
+      stagger: 0.03,
+    })
+
+   
+    tl.call(() => {
+      setSelectedProject(project)
+    })
+
+   
+    tl.call(() => {
+      gsap.set(els, {
+        opacity: 0,
+        clipPath: "inset(100% 0% 0% 0%)",
+        y: 20,
+      })
+    })
 
     
-    const els = [titleLineRefs.current[0], descriptionRef.current].filter(Boolean)
-    gsap.to(els, {
-      opacity: 0,
-      y: -10,
-      duration: 0.5,
-      onComplete: () => {
-        setSelectedProject(project)
-        gsap.to(els, {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          delay: 1.5,
-          ease: "power2.out",
-        })
-      },
+    tl.to(els, {
+      opacity: 1,
+      clipPath: "inset(0% 0% 0% 0%)",
+      y: 0,
+      duration: 0.7,
+      ease: "expo.out",
+      stagger: 0.08,
     })
   }
 
-  
   const currentTitleLines =
     isWork && selectedProject ? [selectedProject.title] : content.title
 
@@ -152,58 +176,63 @@ const Hero = ({ activeSection = "Home" }: HeroProps) => {
       ? selectedProject.description
       : content.description
 
-  
-    return (
-      <div 
-        ref={containerRef} 
-        className="flex flex-col items-center text-center gap-4 pointer-events-none"
+  return (
+    <div ref={containerRef} className="mt-12 flex flex-col items-center text-center gap-4 pointer-events-none">
+    
+      <p
+        ref={eyebrowRef}
+        className="text-white/60 text-sm md:text-base tracking-[0.3em] uppercase"
+        style={{ willChange: "clip-path, transform" }}
       >
-      
-        <p ref={eyebrowRef} className="text-white/60 text-sm md:text-base tracking-[0.3em] uppercase">
-          {isWork && selectedProject ? selectedProject.category : content.eyebrow}
-        </p>
-    
-        <h1 className="text-5xl md:text-9xl font-bold text-white tracking-tight leading-[0.95]">
-          {currentTitleLines.map((line, i) => (
-            <span key={`${displayedSection}-${selectedProject?.id || 'default'}-${i}`} className="block overflow-visible">
-              <span
-                ref={(el) => {
-                  titleLineRefs.current[i] = el
-                }}
-                className="inline-block"
-              >
-                {line}
-              </span>
+        {isWork && selectedProject ? selectedProject.category : content.eyebrow}
+      </p>
+
+ 
+      <h1 className="text-5xl md:text-9xl font-bold text-white tracking-tight leading-[0.95]">
+        {currentTitleLines.map((line, i) => (
+          <span key={`${displayedSection}-${selectedProject?.id || 'default'}-${i}`} className="block overflow-visible">
+            <span
+              ref={(el) => {
+                titleLineRefs.current[i] = el
+              }}
+              className="inline-block"
+              style={{ willChange: "clip-path, transform" }}
+            >
+              {line}
             </span>
-          ))}
-        </h1>
-    
-        <p ref={descriptionRef} className="max-w-xl text-white/70 text-base md:text-lg mt-2 min-h-[48px]">
-          {isHome ? (
-            <>
-              I build interactive, shader-driven web experiences — and I talk about them in{" "}
-              <span className="text-white font-medium inline-block min-w-[7ch]">
-                {LANGUAGES[langIndex]}
-              </span>
-              , among 8 languages.
-            </>
-          ) : (
-            currentDescription
-          )}
-        </p>
-    
-       
-        {isWork && selectedProject && (
-          <div className="pointer-events-auto">
-            <ProjectTimeline
-              activeProject={selectedProject}
-              onSelectProject={handleSelectProject}
-            />
-          </div>
-        )}
-      </div>
-    )
+          </span>
+        ))}
+      </h1>
+
   
+      <p
+        ref={descriptionRef}
+        className="max-w-xl font-serif text-white/70 text-base md:text-lg mt-2 min-h-[48px]"
+        style={{ willChange: "clip-path, transform" }}
+      >
+        {isHome ? (
+          <>
+            I build interactive, shader-driven web experiences — and I talk about
+            them in{" "}
+            <span className="text-white font-medium inline-block min-w-[7ch] transition-opacity duration-300">
+              {LANGUAGES[langIndex]}
+            </span>
+            , among 8 languages.
+          </>
+        ) : (
+          currentDescription
+        )}
+      </p>
+
+     
+      {isWork && selectedProject && (
+        <ProjectTimeline
+          activeProject={selectedProject}
+          onSelectProject={handleSelectProject}
+        />
+      )}
+    </div>
+  )
 }
 
 export default Hero
