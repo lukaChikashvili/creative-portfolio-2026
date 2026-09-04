@@ -23,25 +23,80 @@ export const PROJECTS: Project[] = [
   {
     id: "2",
     title: " 3D Movie Platform",
-    category: "Next.js / Convex",
-    description: "Full-stack application built for real-time collaboration and analytics.",
-    demoUrl: "https://example-saas.com",
-    githubUrl: "https://github.com/your-username/saas-platform",
+    category: "Next.js - Three js - GSAP - GLSL",
+    description: "georgian movie 3D platform using three js and shaders",
+    demoUrl: "https://buzebi.vercel.app/",
+    githubUrl: "https://github.com/lukaChikashvili/buzebi",
   },
   {
     id: "3",
-    title: "Shader Art",
-    category: "Three.js / WebGL",
-    description: "Generative procedural art pieces driven by fragment shaders.",
-    demoUrl: "https://example-shaders.com",
-    githubUrl: "https://github.com/your-username/shader-art",
+    title: "Tamada",
+    category: "Next - Supabase - Prisma - Tailwind - shadcn/ui",
+    description: "with tamada you can see different georgian tamadas, filter with age, location and so on. then you can book a meeting your chosen tamada.",
+    demoUrl: "https://tamada-19ki.vercel.app/",
+    githubUrl: "https://github.com/lukaChikashvili/Tamada",
   },
   {
     id: "4",
-    title: "AI Assistant",
-    category: "TypeScript / Node",
-    description: "Automated workflow agent leveraging streaming AI completions.",
-    githubUrl: "https://github.com/your-username/ai-assistant",
+    title: "My3dGirl",
+    category: "Next - Supabase - Prisma - THREE.JS",
+    description: "with My3DGirl you can play with 3d girl model, you can change clothes, colors, textures and so on. capture screenshots of your girl and post it on feed, so that others could see.",
+    demoUrl: "https://memoria-gilt.vercel.app/",
+    githubUrl: "https://github.com/lukaChikashvili/memoria",
+  },
+
+  {
+    id: "5",
+    title: "Vangadamus",
+    category: "React - three js - Typescript",
+    description: "think about anything you are worried about and roll the rock. there are 21 numbers. on each number there is a meaning.",
+    demoUrl: "https://vangadamus.vercel.app/",
+    githubUrl: "https://github.com/lukaChikashvili/vangadamus",
+  },
+
+  {
+    id: "6",
+    title: "Planetarium X",
+    category: "React - three js - GLSL - gsap",
+    description: " discover planets, interact with realistic earth, read about interesting informations about them .",
+    demoUrl: "https://3-d-planets.vercel.app/",
+    githubUrl: "https://github.com/lukaChikashvili/3D-planets",
+  },
+
+  {
+    id: "7",
+    title: "MixMaster",
+    category: "React - THREE JS ",
+    description: " 3d software, where you can modify mesh, interact with 3d text and more.",
+    demoUrl: "https://mix-master-seven.vercel.app/",
+    githubUrl: "http://github.com/lukaChikashvili/MixMaster",
+  },
+
+  {
+    id: "8",
+    title: "Baia sports complex",
+    category: "React -  ",
+    description: "gym website for local business",
+    demoUrl: "https://baia-frontend.onrender.com/",
+    githubUrl: "https://github.com/lukaChikashvili/baia",
+  },
+
+  {
+    id: "9",
+    title: "Paradise",
+    category: "React - three js - GSAP -GLSL ",
+    description: "design 3d grave stone and textures",
+    demoUrl: "https://saflavis-qva.vercel.app/",
+    githubUrl: "https://github.com/lukaChikashvili/saflavis-qva",
+  },
+
+  {
+    id: "10",
+    title: "Old Portfolio",
+    category: "React - three js - GSAP -GLSL ",
+    description: "my old portfolio from 2024",
+    demoUrl: "https://portfolio2-rho-lyart.vercel.app/",
+    githubUrl: "https://github.com/lukaChikashvili/portfolio2",
   },
 ]
 
