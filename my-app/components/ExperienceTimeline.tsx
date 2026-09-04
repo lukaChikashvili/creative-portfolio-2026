@@ -40,7 +40,7 @@ export const EXPERIENCES: Experience[] = [
     title: " learning languages",
     category: "Polyglot life",
     description:
-      "currently mastering Chinese, avtively reading books in - Spanish, Italian, French, Portuguese, English and Hindi",
+      "currently mastering Chinese, actively reading books in - Spanish, Italian, French, Portuguese, English and Hindi",
   },
 
 
