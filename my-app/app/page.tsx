@@ -14,7 +14,7 @@ export default function Home() {
     <main className="relative w-screen h-screen overflow-hidden bg-black select-none">
     
       <Canvas shadows className="absolute inset-0 z-0">
-        <OrbitControls />
+        <OrbitControls  />
         <Experience activeSection={activeSection} />
         <Lights />
         <Header3D onNavigate={setActiveSection} />
