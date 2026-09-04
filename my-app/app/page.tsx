@@ -12,7 +12,7 @@ export default function Home() {
 
   return (
     <main className="relative w-screen h-screen overflow-hidden bg-black select-none">
-      {/* 3D WebGL Canvas Layer - Always interactive underneath */}
+    
       <Canvas shadows className="absolute inset-0 z-0">
         <OrbitControls />
         <Experience activeSection={activeSection} />
@@ -20,9 +20,9 @@ export default function Home() {
         <Header3D onNavigate={setActiveSection} />
       </Canvas>
 
-      {/* 2D Overlay Container - Passes through clicks to Canvas */}
+     
       <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center pointer-events-none p-4">
-        {/* Hero component contains interactive elements marked with pointer-events-auto */}
+       
         <Hero activeSection={activeSection} />
       </div>
     </main>

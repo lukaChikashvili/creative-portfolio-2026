@@ -2,6 +2,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import gsap from "gsap"
 import ProjectTimeline, { PROJECTS, type Project } from "./ProjectTimeline"
+import ExperienceTimeline, { EXPERIENCES, type Experience } from "./ExperienceTimeline"
 
 const LANGUAGES = [
   "Georgian", "English", "Spanish", "French", "Italian", "Portuguese", "Hindi", "Chinese",
@@ -44,6 +45,7 @@ interface HeroProps {
 const Hero = ({ activeSection = "Home" }: HeroProps) => {
   const [displayedSection, setDisplayedSection] = useState(activeSection)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [selectedExperience, setSelectedExperience] = useState<Experience | null>(null)
   const [langIndex, setLangIndex] = useState(0)
 
   const containerRef = useRef<HTMLDivElement>(null)
@@ -54,6 +56,7 @@ const Hero = ({ activeSection = "Home" }: HeroProps) => {
   const content = SECTION_CONTENT[displayedSection] ?? SECTION_CONTENT.Home
   const isHome = displayedSection === "Home"
   const isWork = displayedSection === "Work"
+  const isAbout = displayedSection === "About"
 
   titleLineRefs.current = []
 
@@ -77,6 +80,12 @@ const Hero = ({ activeSection = "Home" }: HeroProps) => {
       setSelectedProject(PROJECTS[0])
     } else {
       setSelectedProject(null)
+    }
+
+    if (activeSection === "About") {
+      setSelectedExperience(EXPERIENCES[0])
+    } else {
+      setSelectedExperience(null)
     }
   }, [activeSection])
 
@@ -168,12 +177,58 @@ const Hero = ({ activeSection = "Home" }: HeroProps) => {
     })
   }
 
+  const handleSelectExperience = (experience: Experience) => {
+    if (!isAbout || experience.id === selectedExperience?.id) return
+
+    const els = [eyebrowRef.current, titleLineRefs.current[0], descriptionRef.current].filter(
+      (el): el is HTMLElement => Boolean(el)
+    )
+
+    const tl = gsap.timeline()
+
+    tl.to(els, {
+      opacity: 0,
+      clipPath: "inset(0% 0% 100% 0%)",
+      y: -15,
+      duration: 0.3,
+      ease: "power2.in",
+      stagger: 0.03,
+    })
+
+    tl.call(() => {
+      setSelectedExperience(experience)
+    })
+
+    tl.call(() => {
+      gsap.set(els, {
+        opacity: 0,
+        clipPath: "inset(100% 0% 0% 0%)",
+        y: 20,
+      })
+    })
+
+    tl.to(els, {
+      opacity: 1,
+      clipPath: "inset(0% 0% 0% 0%)",
+      y: 0,
+      duration: 0.7,
+      ease: "expo.out",
+      stagger: 0.08,
+    })
+  }
+
   const currentTitleLines =
-    isWork && selectedProject ? [selectedProject.title] : content.title
+    isWork && selectedProject
+      ? [selectedProject.title]
+      : isAbout && selectedExperience
+      ? [selectedExperience.title]
+      : content.title
 
   const currentDescription =
     isWork && selectedProject
       ? selectedProject.description
+      : isAbout && selectedExperience
+      ? selectedExperience.description
       : content.description
 
   return (
@@ -184,13 +239,20 @@ const Hero = ({ activeSection = "Home" }: HeroProps) => {
         className="text-white/60 text-sm md:text-base tracking-[0.3em] uppercase"
         style={{ willChange: "clip-path, transform" }}
       >
-        {isWork && selectedProject ? selectedProject.category : content.eyebrow}
+        {isWork && selectedProject
+          ? selectedProject.category
+          : isAbout && selectedExperience
+          ? selectedExperience.category
+          : content.eyebrow}
       </p>
 
  
       <h1 className="text-5xl md:text-9xl font-bold text-white tracking-tight leading-[0.95]">
         {currentTitleLines.map((line, i) => (
-          <span key={`${displayedSection}-${selectedProject?.id || 'default'}-${i}`} className="block overflow-visible">
+          <span
+            key={`${displayedSection}-${selectedProject?.id || selectedExperience?.id || 'default'}-${i}`}
+            className="block overflow-visible"
+          >
             <span
               ref={(el) => {
                 titleLineRefs.current[i] = el
@@ -231,6 +293,15 @@ const Hero = ({ activeSection = "Home" }: HeroProps) => {
           onSelectProject={handleSelectProject}
         />
       )}
+
+      {isAbout && selectedExperience && (
+        <ExperienceTimeline
+          activeExperience={selectedExperience}
+          onSelectExperience={handleSelectExperience}
+        />
+      )}
+
+      {}
     </div>
   )
 }
