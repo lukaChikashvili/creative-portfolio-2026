@@ -4,13 +4,18 @@ import gsap from "gsap"
 import ProjectTimeline, { PROJECTS, type Project } from "./ProjectTimeline"
 import ExperienceTimeline, { EXPERIENCES, type Experience } from "./ExperienceTimeline"
 
+interface ContactLink {
+  label: string
+  url: string
+}
+
 const LANGUAGES = [
   "Georgian", "English", "Spanish", "French", "Italian", "Portuguese", "Hindi", "Chinese",
 ]
 
 const SECTION_CONTENT: Record<
   string,
-  { eyebrow: string; title: string[]; description: string | null }
+  { eyebrow: string; title: string[]; description: string | null;  links?: ContactLink[] }
 > = {
   Home: {
     eyebrow: "Hi, I'm Luka",
@@ -33,7 +38,20 @@ const SECTION_CONTENT: Record<
     title: ["What I Use"],
     description: "React, Next.js, TypeScript, Convex, React Three Fiber, GLSL, GSAP.",
   },
+
+  Contact: {
+    eyebrow: "Contact",
+    title: ["Let's Talk"],
+    description: "Feel free to reach out — I'm always open to new projects and ideas.",
+    links: [
+      { label: "lukachikashvili6@gmail.com", url: "mailto:lukachikashvili6@gmail.com" },
+      { label: "GitHub", url: "https://github.com/lukaChikashvili" },
+      { label: "LinkedIn", url: "https://www.linkedin.com/in/lukachikashvili/" },
+    ],
+  },
 }
+
+
 
 const CLIP_HIDDEN = "inset(100% 0% 0% 0%)"
 const CLIP_VISIBLE = "inset(0% 0% 0% 0%)"
@@ -58,13 +76,14 @@ const Hero = ({ activeSection = "Home" }: HeroProps) => {
   const isWork = displayedSection === "Work"
   const isAbout = displayedSection === "About"
 
+  const linksRef = useRef<HTMLDivElement>(null)
+
   titleLineRefs.current = []
 
   const getRevealEls = () =>
-    [eyebrowRef.current, ...titleLineRefs.current, descriptionRef.current].filter(
-      (el): el is HTMLElement => Boolean(el)
-    )
-
+  [eyebrowRef.current, ...titleLineRefs.current, descriptionRef.current, linksRef.current].filter(
+    (el): el is HTMLElement => Boolean(el)
+  )
 
   useEffect(() => {
     if (!isHome) return
@@ -301,7 +320,25 @@ const Hero = ({ activeSection = "Home" }: HeroProps) => {
         />
       )}
 
-      {}
+{content.links && (
+  <div
+    ref={linksRef}
+    className="flex gap-6 mt-4 pointer-events-auto"
+    style={{ willChange: "clip-path, transform" }}
+  >
+    {content.links.map((link) => (
+      
+       <a key={link.label}
+        href={link.url}
+        target={link.url.startsWith("mailto:") ? undefined : "_blank"}
+        rel={link.url.startsWith("mailto:") ? undefined : "noopener noreferrer"}
+        className="text-white/70 hover:text-white text-sm tracking-[0.2em] font-serif uppercase transition-colors"
+      >
+        {link.label}
+      </a>
+    ))}
+  </div>
+)}
     </div>
   )
 }

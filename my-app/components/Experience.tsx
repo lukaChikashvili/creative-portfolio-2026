@@ -9,13 +9,14 @@ const SECTIONS: Record<
   string,
   { position: [number, number, number]; lookAt: [number, number, number]; planeOffset: number }
 > = {
-  Home: { position: [0, 0, 5], lookAt: [0, 0, -10], planeOffset: 0 },
-  About: { position: [0, 0, 8], lookAt: [50, 0, -10], planeOffset: -50 },
-  Work: { position: [0, 0, 8], lookAt: [50, 0, -10], planeOffset: 50 },
-  Skills: { position: [0, 0, 8], lookAt: [50, 0, -10], planeOffset: -100 },
+  Home:    { position: [0, 0, 5], lookAt: [0, 0, -10],   planeOffset: 0 },
+  About:   { position: [0, 0, 8], lookAt: [-50, 0, -10], planeOffset: -50 },
+  Work:    { position: [0, 0, 8], lookAt: [50, 0, -10],  planeOffset: 50 },
+  Skills:  { position: [0, 0, 8], lookAt: [-100, 0, -10],planeOffset: -100 },
+  Contact: { position: [0, 0, 8], lookAt: [100, 0, -10], planeOffset: 100 },
 }
 
-const INITIAL_PLANE_POSITIONS = [0, 50, -50, 100];
+const INITIAL_PLANE_POSITIONS = [0, 50, -50, 100, -100]
 
 interface ExperienceProps {
   activeSection: string
@@ -28,6 +29,7 @@ const Experience = ({ activeSection }: ExperienceProps) => {
   const plane2Ref = useRef<THREE.Mesh>(null)
   const plane3Ref = useRef<THREE.Mesh>(null)
   const plane4Ref = useRef<THREE.Mesh>(null)
+  const plane5Ref = useRef<THREE.Mesh>(null)
 
   const prevSection = useRef(activeSection)
   const isFirstRun = useRef(true)
@@ -46,7 +48,7 @@ const Experience = ({ activeSection }: ExperienceProps) => {
     const homeTarget = SECTIONS['Home']
     if (!target || !homeTarget) return
 
-    const planes = [plane1Ref.current, plane2Ref.current, plane3Ref.current, plane4Ref.current]
+    const planes = [plane1Ref.current, plane2Ref.current, plane3Ref.current, plane4Ref.current, plane5Ref.current,]
     const planePositions = planes.map((p) => p?.position).filter(Boolean)
 
     gsap.killTweensOf(planePositions);
@@ -92,7 +94,7 @@ const Experience = ({ activeSection }: ExperienceProps) => {
       <DeformingGradientBackground ref={plane2Ref} position={[50, 0, -10]} colorA="#E63946" colorB='#224248' width={50} height={25} />
       <DeformingGradientBackground ref={plane3Ref} position={[-50, 0, -10]} colorA="#413333" colorB="#91008D" width={50} height={25} />
       <DeformingGradientBackground ref={plane4Ref} position={[100, 0, -10]} colorA="#FF9C4C" colorB="#60241E" glowColor='#1D2128' width={50} height={25} />
-
+      <DeformingGradientBackground ref={plane5Ref} position={[-100, 0, -10]} colorA="#55E07E" colorB="#4E1F6E" glowColor='#FFD400' width={50} height={25} />
      
     </>
   )
