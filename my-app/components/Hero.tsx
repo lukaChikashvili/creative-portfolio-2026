@@ -7,6 +7,7 @@ import ExperienceTimeline, { EXPERIENCES, type Experience } from "./ExperienceTi
 interface ContactLink {
   label: string
   url: string
+
 }
 
 const LANGUAGES = [
@@ -58,9 +59,10 @@ const CLIP_VISIBLE = "inset(0% 0% 0% 0%)"
 
 interface HeroProps {
   activeSection?: string
+  is3D?: boolean
 }
 
-const Hero = ({ activeSection = "Home" }: HeroProps) => {
+const Hero = ({ activeSection = "Home" , is3D = false }: HeroProps) => {
   const [displayedSection, setDisplayedSection] = useState(activeSection)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [selectedExperience, setSelectedExperience] = useState<Experience | null>(null)
@@ -84,6 +86,32 @@ const Hero = ({ activeSection = "Home" }: HeroProps) => {
   [eyebrowRef.current, ...titleLineRefs.current, descriptionRef.current, linksRef.current].filter(
     (el): el is HTMLElement => Boolean(el)
   )
+
+
+  useEffect(() => {
+    const els = getRevealEls()
+    if (is3D) {
+      gsap.to(els, {
+        opacity: 0,
+        y: -20,
+        clipPath: "inset(0% 0% 100% 0%)",
+        duration: 0.5,
+        ease: "power3.in",
+        stagger: 0.04,
+      })
+    } else {
+      gsap.to(els, {
+        opacity: 1,
+        y: 0,
+        clipPath: CLIP_VISIBLE,
+        duration: 0.9,
+        ease: "expo.out",
+        stagger: 0.08,
+        delay: 0.3,
+      })
+    }
+  }, [is3D]);
+  
 
   useEffect(() => {
     if (!isHome) return

@@ -20,10 +20,16 @@ const INITIAL_PLANE_POSITIONS = [0, 50, -50, 100, -100]
 
 interface ExperienceProps {
   activeSection: string
+  is3D?: boolean
   onSectionChange?: (section: string) => void
 }
 
-const Experience = ({ activeSection }: ExperienceProps) => {
+const FLOOR_CAMERA: { position: [number, number, number]; lookAt: [number, number, number] } = {
+  position: [0, 35, 30],
+  lookAt: [0, 0, -10],
+}
+
+const Experience = ({ activeSection,  is3D = false  }: ExperienceProps) => {
   const cameraRigRef = useRef<CameraRigHandle>(null)
   const plane1Ref = useRef<THREE.Mesh>(null)
   const plane2Ref = useRef<THREE.Mesh>(null)
@@ -84,7 +90,41 @@ const Experience = ({ activeSection }: ExperienceProps) => {
     return () => {
       tl.kill()
     }
-  }, [activeSection])
+  }, [activeSection]);
+
+
+  useEffect(() => {
+    const planes = [plane1Ref, plane2Ref, plane3Ref, plane4Ref, plane5Ref]
+      .map((r) => r.current)
+      .filter(Boolean) as THREE.Mesh[]
+
+    gsap.killTweensOf(planes.map((p) => p.rotation))
+
+    if (is3D) {
+      cameraRigRef.current?.flyTo(FLOOR_CAMERA.position, FLOOR_CAMERA.lookAt, 2)
+
+      planes.forEach((plane, i) => {
+        gsap.to(plane.rotation, {
+          x: -Math.PI / 2,
+          duration: 1.6,
+          delay: i * 0.05,
+          ease: 'power3.inOut',
+        })
+      })
+    } else {
+      const home = SECTIONS['Home']
+      cameraRigRef.current?.flyTo(home.position, home.lookAt, 1.5)
+
+      planes.forEach((plane, i) => {
+        gsap.to(plane.rotation, {
+          x: 0,
+          duration: 1.2,
+          delay: i * 0.04,
+          ease: 'power3.inOut',
+        })
+      })
+    }
+  }, [is3D]);
 
   return (
     <>
