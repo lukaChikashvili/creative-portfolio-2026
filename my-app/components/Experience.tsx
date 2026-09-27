@@ -88,10 +88,10 @@ const Experience = ({ activeSection }: ExperienceProps) => {
     <>
       <CameraRig ref={cameraRigRef} />
 
-      <DeformingGradientBackground ref={plane1Ref} position={[0, 0, -10]} width={50} height={25} />
-      <DeformingGradientBackground ref={plane2Ref} position={[50, 0, -10]} colorA="#DF301C" width={50} height={25} />
-      <DeformingGradientBackground ref={plane3Ref} position={[-50, 0, -10]} colorA="#2E2910" colorB="#F599C6" width={50} height={25} />
-      <DeformingGradientBackground ref={plane4Ref} position={[100, 0, -10]} colorA="#66BB6A" colorB="#1B5E20" width={50} height={25} />
+      <DeformingGradientBackground ref={plane1Ref} position={[0, 0, -10]} colorA='#249E94' colorB='#005461' glowColor='#FFF6F6' width={50} height={25} />
+      <DeformingGradientBackground ref={plane2Ref} position={[50, 0, -10]} colorA="#E63946" colorB='#224248' width={50} height={25} />
+      <DeformingGradientBackground ref={plane3Ref} position={[-50, 0, -10]} colorA="#413333" colorB="#91008D" width={50} height={25} />
+      <DeformingGradientBackground ref={plane4Ref} position={[100, 0, -10]} colorA="#FF9C4C" colorB="#60241E" glowColor='#1D2128' width={50} height={25} />
 
      
     </>
