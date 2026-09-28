@@ -37,7 +37,7 @@ const SECTION_CONTENT: Record<
   Skills: {
     eyebrow: "Skills",
     title: ["What I Use"],
-    description: "React, Next.js, TypeScript, Convex, React Three Fiber, GLSL, GSAP.",
+    description: "React, Next.js, TypeScript, Three.js, React Three Fiber, GLSL, GSAP, Tailwind CSS, Node.js, Convex, Prisma, Supabase, Redux Toolkit, Python, AI Engineering, DSA, Figma, Blender, numpy, matplotlib, pandas",
   },
 
   Contact: {
