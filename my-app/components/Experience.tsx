@@ -4,7 +4,7 @@ import * as THREE from 'three'
 import gsap from 'gsap'
 import DeformingGradientBackground from './WaterPlane'
 import CameraRig, { type CameraRigHandle } from './CameraRig'
-import { ContactShadows, Environment, Stars } from '@react-three/drei'
+import { ContactShadows, Environment, PerspectiveCamera, Stars } from '@react-three/drei'
 import PhysicsMenu from './PhysicsMenu'
 
 
@@ -223,9 +223,8 @@ const Experience = ({ activeSection,  is3D = false, onSectionChange  }: Experien
   <>
     <Stars />
 
-    <PhysicsMenu
-      onSelect={onSectionChange}
-    />
+  
+
   </>
 )}
 

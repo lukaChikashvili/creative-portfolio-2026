@@ -6,7 +6,7 @@ import Experience from "@/components/Experience"
 import Hero from "@/components/Hero"
 import Lights from "@/components/Lights"
 import Header3D from "@/components/Header"
-import View3DToggle from "@/components/View3DToggle"
+
 import { Physics } from "@react-three/rapier"
 
 export default function Home() {
@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <main className="relative w-screen h-screen overflow-hidden bg-black select-none">
     
-      <Canvas shadows className="absolute inset-0 z-0">
+      <Canvas shadows className="absolute inset-0 z-0" >
         <Physics>
         <OrbitControls  />
         <Experience activeSection={activeSection}  is3D={is3D} />
@@ -25,14 +25,14 @@ export default function Home() {
            is3D={is3D}
           onNavigate={setActiveSection}
             />
-       </Physics>63ehdc a`````  `
+       </Physics>
       </Canvas>
 
      
       <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center pointer-events-none p-4">
        
         <Hero activeSection={activeSection}  is3D={is3D} />
-        <View3DToggle is3D={is3D} onToggle={() => setIs3D((v) => !v)} />
+     
       </div>
     </main>
   )
