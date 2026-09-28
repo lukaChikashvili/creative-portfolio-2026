@@ -4,7 +4,8 @@ import * as THREE from 'three'
 import gsap from 'gsap'
 import DeformingGradientBackground from './WaterPlane'
 import CameraRig, { type CameraRigHandle } from './CameraRig'
-import NavCubes from './NavCubes'
+import { Stars } from '@react-three/drei'
+
 
 const SECTIONS: Record<
   string,
@@ -174,7 +175,7 @@ const Experience = ({ activeSection,  is3D = false, onSectionChange  }: Experien
       <DeformingGradientBackground ref={plane5Ref} position={[-100, 0, -10]} colorA="#55E07E" colorB="#4E1F6E" glowColor='#FFD400' width={50} height={25} />
      
 
-      {is3D && <NavCubes scale={FLOOR_SCALE} onNavigate={onSectionChange} />}
+    {is3D && <Stars />}
      
     </>
   )

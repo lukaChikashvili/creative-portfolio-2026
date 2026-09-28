@@ -19,7 +19,10 @@ export default function Home() {
         <OrbitControls  />
         <Experience activeSection={activeSection}  is3D={is3D} />
         <Lights />
-        <Header3D onNavigate={setActiveSection} />
+        <Header3D
+           is3D={is3D}
+          onNavigate={setActiveSection}
+            />
        
       </Canvas>
 
