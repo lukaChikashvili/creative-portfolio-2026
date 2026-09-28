@@ -18,7 +18,12 @@ export default function Home() {
     
       <Canvas shadows className="absolute inset-0 z-0" >
         <Physics>
-        <OrbitControls  />
+        <OrbitControls
+  minPolarAngle={Math.PI / 3}
+  maxPolarAngle={Math.PI / 2}
+  minAzimuthAngle={-Math.PI / 4}
+  maxAzimuthAngle={Math.PI / 4}
+/>
         <Experience activeSection={activeSection}  is3D={is3D} />
         <Lights />
         <Header3D
