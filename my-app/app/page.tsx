@@ -7,6 +7,7 @@ import Hero from "@/components/Hero"
 import Lights from "@/components/Lights"
 import Header3D from "@/components/Header"
 import View3DToggle from "@/components/View3DToggle"
+import { Physics } from "@react-three/rapier"
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState("Home");
@@ -16,6 +17,7 @@ export default function Home() {
     <main className="relative w-screen h-screen overflow-hidden bg-black select-none">
     
       <Canvas shadows className="absolute inset-0 z-0">
+        <Physics>
         <OrbitControls  />
         <Experience activeSection={activeSection}  is3D={is3D} />
         <Lights />
@@ -23,7 +25,7 @@ export default function Home() {
            is3D={is3D}
           onNavigate={setActiveSection}
             />
-       
+       </Physics>63ehdc a`````  `
       </Canvas>
 
      

@@ -1,9 +1,12 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { RoundedBox, Text3D, Center, Text } from "@react-three/drei";
 import * as THREE from "three";
+
+import PhysicsMenu from "./PhysicsMenu";
+
 
 type NavItem = {
   label: string;
@@ -91,6 +94,14 @@ const Header3D = ({
 
     setOpen(true);
   }, []);
+
+  useEffect(() => {
+    if (is3D) {
+      setOpen(false);
+      setActiveIdx(null);
+      document.body.style.cursor = "default";
+    }
+  }, [is3D]);
 
 
 
@@ -302,56 +313,7 @@ const Header3D = ({
 
 
 
-      {is3D &&
-        NAV_ITEMS.map((item) => (
-          <group
-            key={item.href}
-            position={[
-              item.position[0],
-              y + item.position[1],
-              item.position[2],
-            ]}
-            rotation={item.rotation}
-          >
-            <Center>
-              <Text3D
-                font="/helvetiker_regular.typeface.json"
-                size={0.35}
-                height={0.08}
-                curveSegments={12}
-                bevelEnabled
-                bevelThickness={0.015}
-                bevelSize={0.01}
-                bevelSegments={3}
-                onClick={(e) => {
-                  e.stopPropagation();
-
-                  onNavigate?.(item.label);
-                }}
-                onPointerOver={(e) => {
-                  e.stopPropagation();
-
-                  document.body.style.cursor =
-                    "pointer";
-                }}
-                onPointerOut={(e) => {
-                  e.stopPropagation();
-
-                  document.body.style.cursor =
-                    "default";
-                }}
-              >
-                {item.label}
-
-                <meshStandardMaterial
-                  color="#ffffff"
-                  roughness={0.25}
-                  metalness={0.2}
-                />
-              </Text3D>
-            </Center>
-          </group>
-        ))}
+      
     </group>
   );
 };

@@ -4,7 +4,8 @@ import * as THREE from 'three'
 import gsap from 'gsap'
 import DeformingGradientBackground from './WaterPlane'
 import CameraRig, { type CameraRigHandle } from './CameraRig'
-import { Stars } from '@react-three/drei'
+import { ContactShadows, Environment, Stars } from '@react-three/drei'
+import PhysicsMenu from './PhysicsMenu'
 
 
 const SECTIONS: Record<
@@ -168,15 +169,73 @@ const Experience = ({ activeSection,  is3D = false, onSectionChange  }: Experien
     <>
       <CameraRig ref={cameraRigRef} />
 
-      <DeformingGradientBackground ref={plane1Ref} position={[0, 0, -10]} colorA='#249E94' colorB='#005461' glowColor='#FFF6F6' width={50} height={25} />
-      <DeformingGradientBackground ref={plane2Ref} position={[50, 0, -10]} colorA="#E63946" colorB='#224248' width={50} height={25} />
-      <DeformingGradientBackground ref={plane3Ref} position={[-50, 0, -10]} colorA="#413333" colorB="#91008D" width={50} height={25} />
-      <DeformingGradientBackground ref={plane4Ref} position={[100, 0, -10]} colorA="#FF9C4C" colorB="#60241E" glowColor='#1D2128' width={50} height={25} />
-      <DeformingGradientBackground ref={plane5Ref} position={[-100, 0, -10]} colorA="#55E07E" colorB="#4E1F6E" glowColor='#FFD400' width={50} height={25} />
-     
+      {!is3D ? (
+  <>
+    <DeformingGradientBackground
+      ref={plane1Ref}
+      position={[0, 0, -10]}
+      colorA="#249E94"
+      colorB="#005461"
+      glowColor="#FFF6F6"
+      width={50}
+      height={25}
+    />
 
-    {is3D && <Stars />}
-     
+    <DeformingGradientBackground
+      ref={plane2Ref}
+      position={[50, 0, -10]}
+      colorA="#E63946"
+      colorB="#224248"
+      width={50}
+      height={25}
+    />
+
+    <DeformingGradientBackground
+      ref={plane3Ref}
+      position={[-50, 0, -10]}
+      colorA="#413333"
+      colorB="#91008D"
+      width={50}
+      height={25}
+    />
+
+    <DeformingGradientBackground
+      ref={plane4Ref}
+      position={[100, 0, -10]}
+      colorA="#FF9C4C"
+      colorB="#60241E"
+      glowColor="#1D2128"
+      width={50}
+      height={25}
+    />
+
+    <DeformingGradientBackground
+      ref={plane5Ref}
+      position={[-100, 0, -10]}
+      colorA="#55E07E"
+      colorB="#4E1F6E"
+      glowColor="#FFD400"
+      width={50}
+      height={25}
+    />
+  </>
+) : (
+  <>
+    <Stars />
+
+    <PhysicsMenu
+      onSelect={onSectionChange}
+    />
+  </>
+)}
+
+<Environment preset="dawn" />
+<ContactShadows
+  position={[0, -2.95, 0]}
+  opacity={0.4}
+  scale={40}
+  blur={2.5}
+/>
     </>
   )
 }
